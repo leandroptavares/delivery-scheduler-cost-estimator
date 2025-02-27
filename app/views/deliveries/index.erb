@@ -1,0 +1,63 @@
+<h1 class="text-3xl font-bold">
+  Deliveries
+</h1>
+
+<script>
+    const script = document.getElementById('search-js');
+    // wait for the Mapbox Search JS script to load before using it
+    script.onload = function () {
+      mapboxsearch.config.accessToken = '<%= ENV['MAPBOX_KEY'] %>'
+
+      mapboxsearch.autofill({
+        options: {
+          country: 'nl'
+        }
+      })
+    };
+</script>
+
+<%= form_with model: @delivery, data: { turbo: false } do |f| %>
+  <%= f.label :pickup_address %>
+  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1" %>
+  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2" %>
+  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1" %>
+  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code" %>
+
+  <%= f.label :delivery_address %>
+  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1" %>
+  <%= f.text_field :pickup_address, name: "delivery-city", autocomplete: "address-level2" %>
+  <%= f.text_field :pickup_address, name: "delivery-state", autocomplete: "address-level1" %>
+  <%= f.text_field :pickup_address, name: "delivery-zip", autocomplete: "postal-code" %>
+
+  <%= f.label :weight %>
+  <%= f.number_field :weight %>
+
+  <%= f.label :scheduled_time %>
+  <%= f.text_field :scheduled_time, data: { controller: "datepicker" } %>
+
+  <%= f.submit %>
+<% end %>
+
+<%= search_form_for @q do |f| %>
+  <%= f.label :pickup_address_cont, "Pickup Address:" %>
+  <%= f.search_field :pickup_address_cont, placeholder: "Search pickup address" %>
+
+  <%= f.submit "Filter", name: "" %>
+<% end %>
+
+<%= paginate @deliveries %>
+<%= page_entries_info @deliveries, entry_name: 'item' %>
+<p><%= @total_cost %></p>
+<ul>
+  <% @deliveries.each do |delivery| %>
+    <li>
+      <p><strong>ID:</strong> <%= delivery.id %></p>
+      <p><strong>Pickup Address:</strong> <%= delivery.pickup_address %></p>
+      <p><strong>Delivery Address:</strong> <%= delivery.delivery_address %></p>
+      <p><strong>Weight:</strong> <%= delivery.weight %></p>
+      <p><strong>Distance:</strong> <%= delivery.distance %></p>
+      <p><strong>Scheduled Time:</strong> <%= delivery.scheduled_time %></p>
+      <p><strong>Cost:</strong> <%= delivery.cost %></p>
+    </li>
+  <% end %>
+</ul>
