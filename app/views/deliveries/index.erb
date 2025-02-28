@@ -16,24 +16,28 @@
     };
 </script>
 
-<%= form_with model: @delivery, data: { turbo: false } do |f| %>
+<%= form_with model: @delivery, data: { turbo: false, controller: "validation", action: "submit->validation#formValidation" } do |f| %>
   <%= f.label :pickup_address %>
-  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1" %>
-  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2" %>
-  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1" %>
-  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code" %>
+  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1", required: true, placeholder: "Add a pickup address", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges"} %>
+  <p class="hidden text-red-400 text-sm" data-validation-target="pickupError">Add a valid address</p>
+  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupCityField"} %>
+  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupStateField"} %>
+  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupZipField"} %>
 
   <%= f.label :delivery_address %>
-  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1" %>
-  <%= f.text_field :pickup_address, name: "delivery-city", autocomplete: "address-level2" %>
-  <%= f.text_field :pickup_address, name: "delivery-state", autocomplete: "address-level1" %>
-  <%= f.text_field :pickup_address, name: "delivery-zip", autocomplete: "postal-code" %>
+  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1", required: true, placeholder: "Add a delivery address", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges"} %>
+  <p class="hidden text-red-400 text-sm" data-validation-target="deliveryError">Add a valid address</p>
+  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryCityField"} %>
+  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryStateField"} %>
+  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryZipField"} %>
 
   <%= f.label :weight %>
-  <%= f.number_field :weight %>
+  <%= f.number_field :weight, min: 1, step: 0.1, required: true, placeholder: "Add a weight (in kg)", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "weightField"} %>
+  <p class="hidden text-red-400 text-sm" data-validation-target="weightError">Add a valid weight</p>
 
   <%= f.label :scheduled_time %>
-  <%= f.text_field :scheduled_time, data: { controller: "datepicker" } %>
+  <%= f.text_field :scheduled_time, required: true, placeholder: "Select a date", class: "px-1 py-1 border-2 rounded border-gray-400", data: { controller: "datepicker", validation_target: "dateField" } %>
+  <p class="hidden text-red-400 text-sm" data-validation-target="dateError">Add a valid date</p>
 
   <%= f.submit %>
 <% end %>
