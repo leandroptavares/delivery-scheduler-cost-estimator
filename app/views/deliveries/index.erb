@@ -19,15 +19,15 @@
 <%= form_with model: @delivery, data: { turbo: false } do |f| %>
   <%= f.label :pickup_address %>
   <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1" %>
-  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2" %>
-  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1" %>
-  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code" %>
+  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2", readonly: true %>
+  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1", readonly: true %>
+  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code", readonly: true %>
 
   <%= f.label :delivery_address %>
   <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1" %>
-  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2" %>
-  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1" %>
-  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code" %>
+  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2", readonly: true %>
+  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1", readonly: true %>
+  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code", readonly: true %>
 
   <%= f.label :weight %>
   <%= f.number_field :weight, min: 1, step: 0.1 %>
