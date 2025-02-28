@@ -1,5 +1,5 @@
 <h1 class="text-3xl font-bold">
-  Deliveries
+  <%= link_to "Deliveries", deliveries_path, data: { turbo: false } %>
 </h1>
 
 <script>
@@ -47,7 +47,7 @@
 
 
 
-<%= search_form_for @q do |f| %>
+<%= search_form_for @q, data: { turbo: false } do |f| %>
   <%= f.label :pickup_address_cont, "Pickup Address:" %>
   <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address" %>
 
