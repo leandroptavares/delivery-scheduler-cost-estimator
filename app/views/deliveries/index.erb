@@ -18,22 +18,22 @@
 
 <%= form_with model: @delivery, data: { turbo: false } do |f| %>
   <%= f.label :pickup_address %>
-  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1" %>
-  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2", readonly: true %>
-  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1", readonly: true %>
-  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code", readonly: true %>
+  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1", required: true, placeholder: "Add a pickup address", class: "px-1 py-1 border-2 rounded border-gray-400" %>
+  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
+  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
+  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
 
   <%= f.label :delivery_address %>
-  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1" %>
-  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2", readonly: true %>
-  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1", readonly: true %>
-  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code", readonly: true %>
+  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1", required: true, placeholder: "Add a delivery address", class: "px-1 py-1 border-2 rounded border-gray-400" %>
+  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
+  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
+  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200" %>
 
   <%= f.label :weight %>
-  <%= f.number_field :weight, min: 1, step: 0.1 %>
+  <%= f.number_field :weight, min: 1, step: 0.1, required: true, placeholder: "Add a weight (in kg)", class: "px-1 py-1 border-2 rounded border-gray-400" %>
 
   <%= f.label :scheduled_time %>
-  <%= f.text_field :scheduled_time, data: { controller: "datepicker" } %>
+  <%= f.text_field :scheduled_time, required: true, placeholder: "Select a date", class: "px-1 py-1 border-2 rounded border-gray-400", data: { controller: "datepicker" } %>
 
   <%= f.submit %>
 <% end %>
