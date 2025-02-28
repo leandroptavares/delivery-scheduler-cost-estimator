@@ -8,7 +8,8 @@ export default class extends Controller {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       minDate: new Date().fp_incr(1),
-      time_24hr: true
+      time_24hr: true,
+      disableMobile: "true"
     })
   }
 }

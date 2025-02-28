@@ -39,29 +39,54 @@
   <%= f.text_field :scheduled_time, required: true, placeholder: "Select a date", class: "px-1 py-1 border-2 rounded border-gray-400", data: { controller: "datepicker", validation_target: "dateField" } %>
   <p class="hidden text-red-400 text-sm" data-validation-target="dateError">Add a valid date</p>
 
+  <%= f.label :driver_name, "Driver (optional)" %>
+  <%= f.text_field :driver_name, placeholder: "Choose the driver", class: "px-1 py-1 border-2 rounded border-gray-400" %>
+
   <%= f.submit %>
 <% end %>
 
+
+
 <%= search_form_for @q do |f| %>
   <%= f.label :pickup_address_cont, "Pickup Address:" %>
-  <%= f.search_field :pickup_address_cont, placeholder: "Search pickup address" %>
+  <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address" %>
+
+  <%= f.label :driver_name_cont, "Driver:" %>
+  <%= f.search_field :driver_name_cont, placeholder: "Search by driver" %>
 
   <%= f.submit "Filter", name: "" %>
 <% end %>
 
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Pickup Address</th>
+      <th>Delivery Address</th>
+      <th>Weight</th>
+      <th>Distance</th>
+      <th>Scheduled Time</th>
+      <th>Cost</th>
+      <th>Driver</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @deliveries.each do |delivery| %>
+      <tr>
+        <td><%= delivery.id %></td>
+        <td><%= delivery.pickup_address %></td>
+        <td><%= delivery.delivery_address %></td>
+        <td><%= delivery.weight %></td>
+        <td><%= delivery.distance %></td>
+        <td><%= delivery.scheduled_time %></td>
+        <td><%= delivery.cost %></td>
+        <td><%= delivery.driver_name %></td>
+      </tr>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<p>Total cost: <%= @total_cost %></p>
 <%= paginate @deliveries %>
 <%= page_entries_info @deliveries, entry_name: 'item' %>
-<p><%= @total_cost %></p>
-<ul>
-  <% @deliveries.each do |delivery| %>
-    <li>
-      <p><strong>ID:</strong> <%= delivery.id %></p>
-      <p><strong>Pickup Address:</strong> <%= delivery.pickup_address %></p>
-      <p><strong>Delivery Address:</strong> <%= delivery.delivery_address %></p>
-      <p><strong>Weight:</strong> <%= delivery.weight %></p>
-      <p><strong>Distance:</strong> <%= delivery.distance %></p>
-      <p><strong>Scheduled Time:</strong> <%= delivery.scheduled_time %></p>
-      <p><strong>Cost:</strong> <%= delivery.cost %></p>
-    </li>
-  <% end %>
-</ul>

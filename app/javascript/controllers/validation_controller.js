@@ -4,10 +4,6 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = [ "pickupAddressField", "pickupCityField", "pickupStateField", "pickupZipField", "pickupError", "deliveryAddressField", "deliveryCityField", "deliveryStateField", "deliveryZipField", "deliveryError", "weightField", "weightError", "dateField", "dateError" ]
 
-  connect() {
-    console.log("validation controller is here")
-  }
-
   formValidation(event) {
     event.preventDefault()
 
@@ -44,7 +40,6 @@ export default class extends Controller {
         }
       })
     }
-
 
     if (this.weightFieldTarget.value == "" || this.weightFieldTarget.value < 1) {
       isFormValid = false
