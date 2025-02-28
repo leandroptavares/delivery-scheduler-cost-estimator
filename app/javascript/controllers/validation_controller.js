@@ -10,6 +10,7 @@ export default class extends Controller {
 
   formValidation(event) {
     event.preventDefault()
+
     this.removeErrorStyles()
     let isFormValid = true
 
@@ -74,6 +75,14 @@ export default class extends Controller {
       this.pickupStateFieldTarget.value = ""
       this.pickupZipFieldTarget.value = ""
       this.pickupErrorTarget.classList.add("hidden")
+
+      const pickupFields = [this.pickupAddressFieldTarget, this.pickupCityFieldTarget, this.pickupStateFieldTarget, this.pickupZipFieldTarget]
+
+      pickupFields.forEach((field) => {
+        if (field.classList.contains("border-red-400")) {
+          field.classList.remove("border-red-400")
+        }
+      })
     }
 
     if (event.target === this.deliveryAddressFieldTarget) {
@@ -81,6 +90,14 @@ export default class extends Controller {
       this.deliveryStateFieldTarget.value = ""
       this.deliveryZipFieldTarget.value = ""
       this.deliveryErrorTarget.classList.add("hidden")
+
+      const deliveryFields = [this.deliveryAddressFieldTarget, this.deliveryCityFieldTarget, this.deliveryStateFieldTarget, this.deliveryZipFieldTarget]
+
+      deliveryFields.forEach((field) => {
+        if (field.classList.contains("border-red-400")) {
+          field.classList.remove("border-red-400")
+        }
+      })
     }
   }
 
