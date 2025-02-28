@@ -9,13 +9,15 @@ class DeliveriesController < ApplicationController
   def create
     @delivery = Delivery.new(delivery_params)
 
-    # @delivery.pickup_address = params["pickup address-search"].strip if params["pickup address-search"].present?
     @delivery.pickup_address = "#{params["pickup address-search"].strip}, #{params["pickup-city"]}, #{params["pickup-state"]}, #{params["pickup-zip"]}"
     @delivery.delivery_address = "#{params["delivery address-search"].strip}, #{params["delivery-city"]}, #{params["delivery-state"]}, #{params["delivery-zip"]}"
 
     if @delivery.save
       redirect_to deliveries_path
     else
+      @delivery.pickup_address = ""
+      @delivery.delivery_address = ""
+
       @q = Delivery.ransack(params[:q])
       @deliveries = @q.result.order(created_at: :desc).page(params[:page]).per(10)
       @total_cost = @q.result.sum(:cost)
