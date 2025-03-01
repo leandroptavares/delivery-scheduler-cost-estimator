@@ -2,19 +2,20 @@
   <%= link_to "Deliveries", deliveries_path, data: { turbo: false } %>
 </h1>
 
-<script>
-    const script = document.getElementById('search-js');
-    // wait for the Mapbox Search JS script to load before using it
-    script.onload = function () {
-      mapboxsearch.config.accessToken = '<%= ENV['MAPBOX_KEY'] %>'
+<script data-turbo-eval="false">
+  document.addEventListener("turbo:load", function() {
+    if (!window.mapboxsearch) return;
 
-      mapboxsearch.autofill({
-        options: {
-          country: 'nl'
-        }
-      })
-    };
+    mapboxsearch.config.accessToken = "<%= ENV['MAPBOX_KEY'] %>";
+
+    mapboxsearch.autofill({
+      options: {
+        country: "nl",
+      },
+    });
+  });
 </script>
+
 
 <%= form_with model: @delivery, data: { turbo: false, controller: "validation", action: "submit->validation#formValidation" } do |f| %>
   <%= f.label :pickup_address %>
@@ -89,4 +90,5 @@
 
 <p>Total cost: <%= @total_cost %></p>
 <%= paginate @deliveries %>
+
 <%= page_entries_info @deliveries, entry_name: 'item' %>
