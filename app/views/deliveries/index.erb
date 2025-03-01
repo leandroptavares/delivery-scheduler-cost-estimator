@@ -1,92 +1,244 @@
-<h1 class="text-3xl font-bold">
-  <%= link_to "Deliveries", deliveries_path, data: { turbo: false } %>
-</h1>
+<div data-controller="modal">
+  <div data-modal-target="pageBg" class="">
+    <nav class="w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-[#f7e2b5]">
+      <h1 class="text-3xl font-bold">
+        <%= link_to "Delivery Dashboard", deliveries_path, data: { turbo: false } %>
+      </h1>
+      <button data-action="click->modal#showForm" class="md:w-48 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer">
+        Add a new delivery
+      </button>
+    </nav>
 
-<script>
-    const script = document.getElementById('search-js');
-    // wait for the Mapbox Search JS script to load before using it
-    script.onload = function () {
-      mapboxsearch.config.accessToken = '<%= ENV['MAPBOX_KEY'] %>'
+    <div class="container mx-auto p-4 opacity-100 space-y-4">
+      <%= search_form_for @q, data: { turbo: false } do |f| %>
+        <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
+          <%= f.label :pickup_address_cont, "Pickup Address:" %>
+          <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-      mapboxsearch.autofill({
-        options: {
-          country: 'nl'
-        }
-      })
-    };
-</script>
+          <%= f.label :driver_name_cont, "Driver:" %>
+          <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-<%= form_with model: @delivery, data: { turbo: false, controller: "validation", action: "submit->validation#formValidation" } do |f| %>
-  <%= f.label :pickup_address %>
-  <%= f.text_field :pickup_address, name: "pickup", autocomplete: "address-line1", required: true, placeholder: "Add a pickup address", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges"} %>
-  <p class="hidden text-red-400 text-sm" data-validation-target="pickupError">Add a valid address</p>
-  <%= f.text_field :pickup_address, name: "pickup-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupCityField"} %>
-  <%= f.text_field :pickup_address, name: "pickup-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupStateField"} %>
-  <%= f.text_field :pickup_address, name: "pickup-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "pickupZipField"} %>
+          <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+        </div>
+      <% end %>
 
-  <%= f.label :delivery_address %>
-  <%= f.text_field :delivery_address, name: "delivery", autocomplete: "address-line1", required: true, placeholder: "Add a delivery address", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges"} %>
-  <p class="hidden text-red-400 text-sm" data-validation-target="deliveryError">Add a valid address</p>
-  <%= f.text_field :delivery_address, name: "delivery-city", autocomplete: "address-level2", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryCityField"} %>
-  <%= f.text_field :delivery_address, name: "delivery-state", autocomplete: "address-level1", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryStateField"} %>
-  <%= f.text_field :delivery_address, name: "delivery-zip", autocomplete: "postal-code", readonly: true, class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200", data: { validation_target: "deliveryZipField"} %>
+      <%= page_entries_info @deliveries, entry_name: 'item' %>
+      <div class="p-2 border-gray-400 rounded bg-[#fffdfd] flex flex-col space-y-2">
+        <table class="table-fixed w-full text-center">
+          <thead>
+            <tr>
+              <th class="w-12 px-4 py-2">ID</th>
+              <th class="w-1/5 px-4 py-2">Pickup Address</th>
+              <th class="w-1/5 px-4 py-2">Delivery Address</th>
+              <th class="w-16 px-4 py-2">Weight</th>
+              <th class="w-16 px-4 py-2">Distance</th>
+              <th class="w-24 px-4 py-2">Scheduled Time</th>
+              <th class="w-16 px-4 py-2">Driver</th>
+              <th class="w-16 px-4 py-2">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @deliveries.each do |delivery| %>
+              <tr class="border-b border-gray-400 hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
+                <td><%= delivery.id %></td>
+                <td class="text-start"><%= delivery.pickup_address %></td>
+                <td class="text-start"><%= delivery.delivery_address %></td>
+                <td><%= delivery.weight %> kg</td>
+                <td><%= delivery.distance %> km</td>
+                <td><%= delivery.scheduled_time %></td>
+                <td><%= delivery.driver_name %></td>
+                <td>$<%= delivery.cost %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
 
-  <%= f.label :weight %>
-  <%= f.number_field :weight, min: 1, step: 0.1, required: true, placeholder: "Add a weight (in kg)", class: "px-1 py-1 border-2 rounded border-gray-400", data: { validation_target: "weightField"} %>
-  <p class="hidden text-red-400 text-sm" data-validation-target="weightError">Add a valid weight</p>
+        <div class="flex justify-end">
+          <p class="p-2 border-2 border-[#6e54ff] bg-[#ccccea] rounded font-semibold w-48 text-center">
+            Total cost: $<%= @total_cost %>
+          </p>
+        </div>
+      </div>
 
-  <%= f.label :scheduled_time %>
-  <%= f.text_field :scheduled_time, required: true, placeholder: "Select a date", class: "px-1 py-1 border-2 rounded border-gray-400", data: { controller: "datepicker", validation_target: "dateField" } %>
-  <p class="hidden text-red-400 text-sm" data-validation-target="dateError">Add a valid date</p>
+      <div class="flex flex-col items-center space-y-4">
+        <%= paginate @deliveries %>
+      </div>
 
-  <%= f.label :driver_name, "Driver (optional)" %>
-  <%= f.text_field :driver_name, placeholder: "Choose the driver", class: "px-1 py-1 border-2 rounded border-gray-400" %>
+    </div>
 
-  <%= f.submit %>
-<% end %>
+    <!-- Form modal -->
 
+  </div>
+  <div data-controller="validation "data-modal-target="addDeliveryForm" id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
 
+    <h3 class="text-2xl text-center mb-4 font-bold">Add a new delivery</h3>
 
-<%= search_form_for @q, data: { turbo: false } do |f| %>
-  <%= f.label :pickup_address_cont, "Pickup Address:" %>
-  <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address" %>
+    <%= form_with model: @delivery, data: { turbo: false, action: "submit->validation#formValidation" } do |f| %>
+      <div class="space-y-4">
 
-  <%= f.label :driver_name_cont, "Driver:" %>
-  <%= f.search_field :driver_name_cont, placeholder: "Search by driver" %>
+        <!-- Pickup address -->
+        <div class="space-y-2 flex flex-col">
+          <h4 class="text-lg font-semibold">Pickup Address</h4>
+          <div class="flex space-x-4">
+            <div class="flex flex-col w-4/5 space-y-2">
+              <%= f.label :pickup_address, "Street and number" %>
+              <%= f.text_field :pickup_address,
+                  name: "pickup",
+                  autocomplete: "address-line1",
+                  required: true,
+                  placeholder: "Add a pickup address",
+                  class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
+                  data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges" }
+              %>
+              <p class="hidden text-red-400 text-xs" data-validation-target="pickupError">Add a valid address including street name and number</p>
+            </div>
+            <div class="flex flex-col w-1/5 space-y-2">
+              <%= f.label :pickup_address, "Postcode" %>
+              <%= f.text_field :pickup_address,
+                  name: "pickup-zip",
+                  autocomplete: "postal-code",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "pickupZipField" }
+              %>
+            </div>
+          </div>
 
-  <%= f.submit "Filter", name: "" %>
-<% end %>
+          <div class="flex space-x-4 justify-center">
+            <div class="flex flex-col w-1/2 space-y-2">
+              <%= f.label :pickup_address, "City" %>
+              <%= f.text_field :pickup_address,
+                  name: "pickup-city",
+                  autocomplete: "address-level2",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "pickupCityField" }
+              %>
+            </div>
+            <div class="flex flex-col w-1/2 space-y-2">
+              <%= f.label :pickup_address, "State" %>
+              <%= f.text_field :pickup_address,
+                  name: "pickup-state",
+                  autocomplete: "address-level1",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "pickupStateField" }
+              %>
+            </div>
+          </div>
+        </div>
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Pickup Address</th>
-      <th>Delivery Address</th>
-      <th>Weight</th>
-      <th>Distance</th>
-      <th>Scheduled Time</th>
-      <th>Cost</th>
-      <th>Driver</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @deliveries.each do |delivery| %>
-      <tr>
-        <td><%= delivery.id %></td>
-        <td><%= delivery.pickup_address %></td>
-        <td><%= delivery.delivery_address %></td>
-        <td><%= delivery.weight %></td>
-        <td><%= delivery.distance %></td>
-        <td><%= delivery.scheduled_time %></td>
-        <td><%= delivery.cost %></td>
-        <td><%= delivery.driver_name %></td>
-      </tr>
-      </tr>
+        <!-- Delivery address -->
+        <div class="space-y-2 flex flex-col">
+          <h4 class="text-lg font-semibold">Delivery Address</h4>
+          <div class="flex space-x-4">
+            <div class="flex flex-col w-4/5 space-y-2">
+              <%= f.label :delivery_address, "Street and number" %>
+              <%= f.text_field :delivery_address,
+                  name: "delivery",
+                  autocomplete: "address-line1",
+                  required: true,
+                  placeholder: "Add a delivery address",
+                  class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
+                  data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges" }
+              %>
+              <p class="hidden text-red-400 text-xs" data-validation-target="deliveryError">Add a valid address including street name and number</p>
+            </div>
+            <div class="flex flex-col w-1/5 space-y-2">
+              <%= f.label :delivery_address, "Postcode" %>
+              <%= f.text_field :delivery_address,
+                  name: "delivery-zip",
+                  autocomplete: "postal-code",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "deliveryZipField" }
+              %>
+            </div>
+          </div>
+
+          <div class="flex space-x-4">
+            <div class="flex flex-col w-1/2 space-y-2">
+              <%= f.label :delivery_address, "City" %>
+              <%= f.text_field :delivery_address,
+                  name: "delivery-city",
+                  autocomplete: "address-level2",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "deliveryCityField" }
+              %>
+            </div>
+            <div class="flex flex-col w-1/2 space-y-2">
+              <%= f.label :delivery_address, "State" %>
+              <%= f.text_field :delivery_address,
+                  name: "delivery-state",
+                  autocomplete: "address-level1",
+                  readonly: true,
+                  class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
+                  data: { validation_target: "deliveryStateField" }
+              %>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col">
+          <div class="flex space-x-4">
+            <!-- Weight -->
+            <div class="space-y-2 flex flex-col w-1/2">
+              <%= f.label :weight %>
+              <%= f.number_field :weight,
+                  min: 1,
+                  step: 0.1,
+                  required: true,
+                  placeholder: "Add a weight (in kg)",
+                  class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
+                  data: { validation_target: "weightField" }
+              %>
+              <p class="hidden text-red-400 text-xs" data-validation-target="weightError">Add a valid weight</p>
+            </div>
+
+            <!-- Scheduled time -->
+            <div class="space-y-2 flex flex-col w-1/2">
+              <%= f.label :scheduled_time %>
+              <%= f.text_field :scheduled_time,
+                  required: true,
+                  placeholder: "Select a date",
+                  class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
+                  data: { controller: "datepicker", validation_target: "dateField" }
+              %>
+              <p class="hidden text-red-400 text-xs" data-validation-target="dateError">Add a valid date</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Driver name -->
+        <div class="space-y-2 flex flex-col">
+          <%= f.label :driver_name, "Driver (optional)" %>
+          <%= f.text_field :driver_name,
+              placeholder: "Choose the driver",
+              class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
+              data: { validation_target: "driverNameField" }
+          %>
+        </div>
+
+        <div class="flex flex-row space-x-4">
+          <button data-action="click->modal#closeForm click->validation#clearForm" class="w-1/4 cursor-pointer border rounded p-2 border-[#f7e2b5] bg-[#f7e2b5]">Cancel</button>
+          <%= f.submit "Add delivery", class: "w-3/4 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer" %>
+        </div>
+      </div>
     <% end %>
-  </tbody>
-</table>
+  </div>
+</div>
 
-<p>Total cost: <%= @total_cost %></p>
-<%= paginate @deliveries %>
-<%= page_entries_info @deliveries, entry_name: 'item' %>
+<script data-turbo-eval="false">
+  document.addEventListener("turbo:load", function() {
+    if (!window.mapboxsearch) return;
+
+    mapboxsearch.config.accessToken = "<%= ENV['MAPBOX_KEY'] %>";
+
+    mapboxsearch.autofill({
+      options: {
+        country: "nl",
+      },
+    });
+  });
+</script>
