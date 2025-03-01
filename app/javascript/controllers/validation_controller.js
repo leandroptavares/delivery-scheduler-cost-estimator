@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="validation"
 export default class extends Controller {
-  static targets = [ "pickupAddressField", "pickupCityField", "pickupStateField", "pickupZipField", "pickupError", "deliveryAddressField", "deliveryCityField", "deliveryStateField", "deliveryZipField", "deliveryError", "weightField", "weightError", "dateField", "dateError" ]
+  static targets = [ "pickupAddressField", "pickupCityField", "pickupStateField", "pickupZipField", "pickupError", "deliveryAddressField", "deliveryCityField", "deliveryStateField", "deliveryZipField", "deliveryError", "weightField", "weightError", "dateField", "dateError", "driverNameField" ]
 
   formValidation(event) {
     event.preventDefault()
@@ -102,5 +102,16 @@ export default class extends Controller {
     fields.forEach((field) => {
       field.classList.remove("border-red-400")
     })
+  }
+
+  clearForm() {
+
+    console.log("cleared")
+    const fields = [this.pickupAddressFieldTarget, this.pickupCityFieldTarget, this.pickupStateFieldTarget, this.pickupZipFieldTarget, this.deliveryAddressFieldTarget, this.deliveryCityFieldTarget, this.deliveryStateFieldTarget, this.deliveryZipFieldTarget, this.weightFieldTarget, this.dateFieldTarget, this.driverNameFieldTarget]
+
+    fields.forEach((field) => {
+      field.value = ""
+    })
+
   }
 }

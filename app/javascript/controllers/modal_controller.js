@@ -4,15 +4,15 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["addDeliveryForm", "pageBg"]
 
-  connect() {
-    console.log("modal is here")
-  }
-
   showForm() {
     console.log("show form")
 
     this.addDeliveryFormTarget.classList.remove("hidden")
-    this.addDeliveryFormTarget.classList.add("opacity-100")
-    this.pageBgTarget.classList.add("opacity-25")
+    this.pageBgTarget.classList.add("opacity-25", "pointer-events-none")
+  }
+
+  closeForm() {
+    this.addDeliveryFormTarget.classList.add("hidden")
+    this.pageBgTarget.classList.remove("opacity-25", "pointer-events-none")
   }
 }
