@@ -1,71 +1,75 @@
+<div data-controller="modal">
+  <div data-modal-target="pageBg" class="">
+    <nav class="w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-[#f7e2b5]">
+      <h1 class="text-3xl font-bold">
+        <%= link_to "Delivery Dashboard", deliveries_path, data: { turbo: false } %>
+      </h1>
+      <button data-action="click->modal#showForm" class="md:w-48 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer">
+        Add a new delivery
+      </button>
+    </nav>
 
-<nav class="w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-[#f7e2b5]">
-  <h1 class="text-3xl font-bold">
-    <%= link_to "Delivery Dashboard", deliveries_path, data: { turbo: false } %>
-  </h1>
-  <button class="md:w-48 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer">
-    Add a new delivery
-  </button>
-</nav>
+    <div class="container mx-auto p-4 opacity-100 space-y-4">
+      <%= search_form_for @q, data: { turbo: false } do |f| %>
+        <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
+          <%= f.label :pickup_address_cont, "Pickup Address:" %>
+          <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-<div class="container mx-auto p-4 opacity-100 space-y-4">
-  <%= search_form_for @q, data: { turbo: false } do |f| %>
-    <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
-      <%= f.label :pickup_address_cont, "Pickup Address:" %>
-      <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+          <%= f.label :driver_name_cont, "Driver:" %>
+          <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-      <%= f.label :driver_name_cont, "Driver:" %>
-      <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+          <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+        </div>
+      <% end %>
 
-      <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+      <%= page_entries_info @deliveries, entry_name: 'item' %>
+      <div class="p-2 border-gray-400 rounded bg-[#fffdfd] flex flex-col space-y-2">
+        <table class="table-fixed w-full text-center">
+          <thead>
+            <tr>
+              <th class="w-12 px-4 py-2">ID</th>
+              <th class="w-1/5 px-4 py-2">Pickup Address</th>
+              <th class="w-1/5 px-4 py-2">Delivery Address</th>
+              <th class="w-16 px-4 py-2">Weight</th>
+              <th class="w-16 px-4 py-2">Distance</th>
+              <th class="w-24 px-4 py-2">Scheduled Time</th>
+              <th class="w-16 px-4 py-2">Driver</th>
+              <th class="w-16 px-4 py-2">Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @deliveries.each do |delivery| %>
+              <tr class="border-b border-gray-400 hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
+                <td><%= delivery.id %></td>
+                <td class="text-start"><%= delivery.pickup_address %></td>
+                <td class="text-start"><%= delivery.delivery_address %></td>
+                <td><%= delivery.weight %> kg</td>
+                <td><%= delivery.distance %> km</td>
+                <td><%= delivery.scheduled_time %></td>
+                <td><%= delivery.driver_name %></td>
+                <td>$<%= delivery.cost %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div class="flex justify-end">
+          <p class="p-2 border-2 border-[#6e54ff] bg-[#ccccea] rounded font-semibold w-48 text-center">
+            Total cost: $<%= @total_cost %>
+          </p>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center space-y-4">
+        <%= paginate @deliveries %>
+      </div>
+
     </div>
-  <% end %>
 
-  <%= page_entries_info @deliveries, entry_name: 'item' %>
-  <div class="p-2 border-gray-400 rounded bg-[#fffdfd] flex flex-col space-y-2">
-    <table class="table-fixed w-full text-center">
-      <thead>
-        <tr>
-          <th class="w-12 px-4 py-2">ID</th>
-          <th class="w-1/5 px-4 py-2">Pickup Address</th>
-          <th class="w-1/5 px-4 py-2">Delivery Address</th>
-          <th class="w-16 px-4 py-2">Weight</th>
-          <th class="w-16 px-4 py-2">Distance</th>
-          <th class="w-24 px-4 py-2">Scheduled Time</th>
-          <th class="w-16 px-4 py-2">Driver</th>
-          <th class="w-16 px-4 py-2">Cost</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @deliveries.each do |delivery| %>
-          <tr class="border-b border-gray-400 hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
-            <td><%= delivery.id %></td>
-            <td class="text-start"><%= delivery.pickup_address %></td>
-            <td class="text-start"><%= delivery.delivery_address %></td>
-            <td><%= delivery.weight %> kg</td>
-            <td><%= delivery.distance %> km</td>
-            <td><%= delivery.scheduled_time %></td>
-            <td><%= delivery.driver_name %></td>
-            <td>$<%= delivery.cost %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <!-- Form modal -->
 
-    <div class="flex justify-end">
-      <p class="p-2 border-2 border-[#6e54ff] bg-[#ccccea] rounded font-semibold w-48 text-center">
-        Total cost: $<%= @total_cost %>
-      </p>
-    </div>
   </div>
-
-
-  <div class="flex flex-col items-center space-y-4">
-    <%= paginate @deliveries %>
-  </div>
-
-  <!-- Form modal -->
-  <div id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
+  <div data-modal-target="addDeliveryForm" id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
 
     <h3 class="text-2xl text-center mb-4 font-bold">Add a new delivery</h3>
 
@@ -178,7 +182,7 @@
 
         <div class="flex flex-col">
           <div class="flex space-x-4">
-          <!-- Weight -->
+            <!-- Weight -->
             <div class="space-y-2 flex flex-col w-1/2">
               <%= f.label :weight %>
               <%= f.number_field :weight,
@@ -217,23 +221,20 @@
 
         <%= f.submit "Add delivery", class: "w-full p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer" %>
       </div>
-
-
     <% end %>
   </div>
-
-  <script data-turbo-eval="false">
-    document.addEventListener("turbo:load", function() {
-      if (!window.mapboxsearch) return;
-
-      mapboxsearch.config.accessToken = "<%= ENV['MAPBOX_KEY'] %>";
-
-      mapboxsearch.autofill({
-        options: {
-          country: "nl",
-        },
-      });
-    });
-  </script>
-
 </div>
+
+<script data-turbo-eval="false">
+  document.addEventListener("turbo:load", function() {
+    if (!window.mapboxsearch) return;
+
+    mapboxsearch.config.accessToken = "<%= ENV['MAPBOX_KEY'] %>";
+
+    mapboxsearch.autofill({
+      options: {
+        country: "nl",
+      },
+    });
+  });
+</script>
