@@ -97,14 +97,14 @@
 </div>
 
 <!-- Form modal -->
-<div id="modal-new-delivery" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-96 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
+<div id="modal-new-delivery" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
 
   <h3 class="text-2xl text-center mb-4 font-bold">Add a new delivery</h3>
 
   <%= form_with model: @delivery, data: { turbo: false, controller: "validation", action: "submit->validation#formValidation" } do |f| %>
     <div class="space-y-4">
 
-      <!-- Pickup Address Section -->
+      <!-- Pickup address -->
       <div class="space-y-2 flex flex-col">
         <h4 class="text-lg font-semibold">Pickup Address</h4>
         <div class="flex space-x-4">
@@ -114,19 +114,19 @@
                 name: "pickup",
                 autocomplete: "address-line1",
                 required: true,
-                placeholder: "Add a pickup address (street and number)",
+                placeholder: "Add a pickup address",
                 class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
                 data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges" }
             %>
-            <p class="hidden text-red-400 text-xs" data-validation-target="pickupError">Add a valid address</p>
+            <p class="hidden text-red-400 text-xs" data-validation-target="pickupError">Add a valid address including street name and number</p>
           </div>
           <div class="flex flex-col w-1/5 space-y-2">
-            <%= f.label :pickup_address, "Zip Code" %>
+            <%= f.label :pickup_address, "Postcode" %>
             <%= f.text_field :pickup_address,
                 name: "pickup-zip",
                 autocomplete: "postal-code",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "pickupZipField" }
             %>
           </div>
@@ -139,7 +139,7 @@
                 name: "pickup-city",
                 autocomplete: "address-level2",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "pickupCityField" }
             %>
           </div>
@@ -149,14 +149,14 @@
                 name: "pickup-state",
                 autocomplete: "address-level1",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "pickupStateField" }
             %>
           </div>
         </div>
       </div>
 
-      <!-- Delivery Address Section -->
+      <!-- Delivery address -->
       <div class="space-y-2 flex flex-col">
         <h4 class="text-lg font-semibold">Delivery Address</h4>
         <div class="flex space-x-4">
@@ -170,15 +170,15 @@
                 class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
                 data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges" }
             %>
-            <p class="hidden text-red-400 text-xs" data-validation-target="deliveryError">Add a valid address</p>
+            <p class="hidden text-red-400 text-xs" data-validation-target="deliveryError">Add a valid address including street name and number</p>
           </div>
           <div class="flex flex-col w-1/5 space-y-2">
-            <%= f.label :delivery_address, "Zip Code" %>
+            <%= f.label :delivery_address, "Postcode" %>
             <%= f.text_field :delivery_address,
                 name: "delivery-zip",
                 autocomplete: "postal-code",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "deliveryZipField" }
             %>
           </div>
@@ -191,7 +191,7 @@
                 name: "delivery-city",
                 autocomplete: "address-level2",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "deliveryCityField" }
             %>
           </div>
@@ -201,7 +201,7 @@
                 name: "delivery-state",
                 autocomplete: "address-level1",
                 readonly: true,
-                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200",
+                class: "px-1 py-1 border-2 rounded border-gray-400 bg-gray-200 focus:outline-[#6e54ff]",
                 data: { validation_target: "deliveryStateField" }
             %>
           </div>
@@ -210,8 +210,8 @@
 
       <div class="flex flex-col">
         <div class="flex space-x-4">
-        <!-- Weight Section -->
-          <div class="space-y-2 flex flex-col">
+        <!-- Weight -->
+          <div class="space-y-2 flex flex-col w-1/2">
             <%= f.label :weight %>
             <%= f.number_field :weight,
                 min: 1,
@@ -224,8 +224,8 @@
             <p class="hidden text-red-400 text-xs" data-validation-target="weightError">Add a valid weight</p>
           </div>
 
-          <!-- Scheduled Time Section -->
-          <div class="space-y-2 flex flex-col">
+          <!-- Scheduled time -->
+          <div class="space-y-2 flex flex-col w-1/2">
             <%= f.label :scheduled_time %>
             <%= f.text_field :scheduled_time,
                 required: true,
@@ -238,7 +238,7 @@
         </div>
       </div>
 
-      <!-- Driver Name Section (Optional) -->
+      <!-- Driver name -->
       <div class="space-y-2 flex flex-col">
         <%= f.label :driver_name, "Driver (optional)" %>
         <%= f.text_field :driver_name,
@@ -247,7 +247,7 @@
         %>
       </div>
 
-      <%= f.submit "Add delivery", class: "w-full p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white" %>
+      <%= f.submit "Add delivery", class: "w-full p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer" %>
     </div>
 
 
