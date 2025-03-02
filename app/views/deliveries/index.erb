@@ -292,14 +292,21 @@
   </div>
 
   <!--Flash messages -->
+  <!-- Flash messages -->
   <% if flash[:notice] %>
-  <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-green-400 bg-green-200 rounded text-center md:w-1/4">
-    <%= flash[:notice] %>
-  </div>
+    <div id="flash-message"
+        data-controller="flash"
+        data-flash-target="message"
+        class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-green-400 bg-green-200 rounded text-center md:w-1/4 opacity-0 transition-all duration-500 ease-in-out">
+      <%= flash[:notice] %>
+    </div>
   <% elsif flash[:alert] %>
-  <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-red-400 bg-red-200 rounded text-center">
-    <%= flash[:alert] %>
-  </div>
+    <div id="flash-message"
+        data-controller="flash"
+        data-flash-target="message"
+        class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-red-400 bg-red-200 rounded text-center md:w-1/4 opacity-0 transition-all duration-500 ease-in-out">
+      <%= flash[:alert] %>
+    </div>
   <% end %>
 
 </div>
