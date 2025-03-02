@@ -31,6 +31,9 @@
         <div class="space-y-4">
           <% @deliveries.each do |delivery| %>
             <div class="p-4 border-2 border-gray-400 rounded space-y-3 text-sm flex flex-col hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
+
+              <div class="text-xs">#<%= delivery.id %></div>
+
               <div>
                 <p class="text-xs font-semibold">Pickup address</p>
                 <%= delivery.pickup_address %>
@@ -41,11 +44,10 @@
                 <%= delivery.delivery_address %>
               </div>
 
-              <div class="flex justify-around">
+              <div class="flex justify-between">
                 <span><i class="bi bi-minecart-loaded"></i> <%= delivery.weight %> kg</span>
                 <span><i class="bi bi-truck"></i> <%= delivery.distance %> km</span>
                 <span><i class="bi bi-calendar-check"></i> <%= delivery.scheduled_time.strftime("%B %d, %Y %I:%M %p") %></span>
-                <span><i class="bi bi-coin"></i> $<%= delivery.cost %></span>
               </div>
 
               <% if delivery.driver_name.present? %>
@@ -55,8 +57,8 @@
                 </div>
               <% end %>
 
-              <div class="ml-auto text-xs">
-                <em>#<%= delivery.id %></em>
+              <div class="ml-auto font-semibold">
+                <span><i class="bi bi-coin"></i> $<%= delivery.cost %></span>
               </div>
             </div>
           <% end %>
