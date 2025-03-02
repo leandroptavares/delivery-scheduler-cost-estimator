@@ -6,8 +6,6 @@ export default class extends Controller {
 
   formValidation(event) {
 
-    console.log("running validation")
-
     event.preventDefault()
     this.removeErrorStyles()
     let isFormValid = true
