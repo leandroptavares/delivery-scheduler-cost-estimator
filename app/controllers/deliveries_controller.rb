@@ -13,6 +13,7 @@ class DeliveriesController < ApplicationController
     @delivery.delivery_address = "#{params["delivery address-search"].strip}, #{params["delivery-city"]}, #{params["delivery-state"]}, #{params["delivery-zip"]}"
 
     if @delivery.save
+      flash[:notice] = "Your delivery has been successfully scheduled."
       redirect_to deliveries_path
     else
       @delivery.pickup_address = ""
@@ -21,6 +22,8 @@ class DeliveriesController < ApplicationController
       @q = Delivery.ransack(params[:q])
       @deliveries = @q.result.order(created_at: :desc).page(params[:page]).per(10)
       @total_cost = @q.result.sum(:cost)
+
+      flash[:alert] = "Something went wrong... Please try again."
       render :index, status: :unprocessable_entity
     end
   end

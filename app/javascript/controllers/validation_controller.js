@@ -111,9 +111,16 @@ export default class extends Controller {
   removeErrorStyles() {
     const fields = [this.pickupAddressFieldTarget, this.pickupCityFieldTarget, this.pickupStateFieldTarget, this.pickupZipFieldTarget, this.deliveryAddressFieldTarget, this.deliveryCityFieldTarget, this.deliveryStateFieldTarget, this.deliveryZipFieldTarget, this.weightFieldTarget, this.dateFieldTarget]
 
+    const errorMessages = [this.pickupErrorTarget, this.deliveryErrorTarget, this.weightErrorTarget, this.dateErrorTarget]
+
     fields.forEach((field) => {
       field.classList.remove("border-red-400")
     })
+
+    errorMessages.forEach((message) => {
+      message.classList.add("hidden")
+    })
+
   }
 
   clearForm() {
@@ -122,5 +129,7 @@ export default class extends Controller {
     fields.forEach((field) => {
       field.value = ""
     })
+
+    this.removeErrorStyles()
   }
 }
