@@ -12,8 +12,8 @@
     <div class="container mx-auto p-4 opacity-100 space-y-4">
       <!-- Filters -->
       <div data-controller="filter">
-        <div data-filter-target="filterFields" class="hidden md:block">
-          <%= search_form_for @q, data: { turbo: false } do |f| %>
+        <div data-filter-target="filterFields" class="hidden md:block" data-filter-visible-value="false">
+          <%= search_form_for @q do |f| %>
             <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
               <%= f.label :pickup_address_cont, "Pickup Address:" %>
               <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
@@ -28,8 +28,8 @@
 
         <div class="block md:hidden">
           <div class="flex justify-end">
-            <button class="cursor-pointer p-2 space-x-2 border-2 rounded border-[#6e54ff]" data-action="click->filter#toogleFilters">
-              <i class="bi bi-funnel"></i><span data-filter-target="filterToogle"> Show filters</span>
+            <button class="cursor-pointer p-2 space-x-2 border-2 rounded border-[#6e54ff]" data-action="click->filter#toggleFilters">
+              <i class="bi bi-funnel"></i><span data-filter-target="filterToggle"> Show filters</span>
             </button>
           </div>
         </div>
