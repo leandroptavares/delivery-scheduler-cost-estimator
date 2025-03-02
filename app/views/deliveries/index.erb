@@ -1,6 +1,6 @@
-<div data-controller="modal">
+<div data-controller="modal" class="md:relative">
   <div data-modal-target="pageBg" class="">
-    <nav class="sticky top-0 w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-[#f7e2b5]">
+    <nav class="sticky top-0 w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-gray-200">
       <h1 class="text-3xl font-bold">
         <%= link_to "Delivery Dashboard", deliveries_path, data: { turbo: false } %>
       </h1>
@@ -113,7 +113,7 @@
           </table>
 
           <div class="flex justify-end">
-            <p class="p-2 border-2 border-[#6e54ff] bg-[#ccccea] rounded font-semibold w-48 text-center">
+            <p class="p-2 font-semibold w-48 text-center">
               Total cost: $<%= @total_cost %>
             </p>
           </div>
@@ -121,13 +121,20 @@
       </div>
 
       <!-- Pagination -->
-
       <div class="flex flex-col items-center space-y-4">
         <%= paginate @deliveries %>
       </div>
 
+
     </div>
-  </div>
+
+    <!-- Mobile footer -->
+    <div class="block md:hidden sticky bottom-0 left-0 ">
+      <footer class="w-full p-4 rounded bg-[#ccccea] text-end text-lg">
+          <span class="font-semibold">Total cost: $</span><%= @total_cost %>
+      </footer>
+    </div>
+    </div>
   <!-- Form modal -->
   <div data-controller="validation "data-modal-target="addDeliveryForm" id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
 
@@ -277,7 +284,7 @@
         </div>
 
         <div class="flex flex-row space-x-4">
-          <button data-action="click->modal#closeForm click->validation#clearForm" class="w-1/4 cursor-pointer border rounded p-2 border-[#f7e2b5] bg-[#f7e2b5]">Cancel</button>
+          <button data-action="click->modal#closeForm click->validation#clearForm" class="w-1/4 cursor-pointer border rounded p-2">Cancel</button>
           <%= f.submit "Add delivery", class: "w-3/4 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer" %>
         </div>
       </div>
