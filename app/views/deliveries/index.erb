@@ -1,6 +1,6 @@
-<div data-controller="modal">
+<div data-controller="modal" class="md:relative">
   <div data-modal-target="pageBg" class="">
-    <nav class="w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-[#f7e2b5]">
+    <nav class="sticky top-0 w-full flex flex-col items-center md:flex-row md:justify-between space-y-2 p-4 bg-gray-200">
       <h1 class="text-3xl font-bold">
         <%= link_to "Delivery Dashboard", deliveries_path, data: { turbo: false } %>
       </h1>
@@ -10,66 +10,133 @@
     </nav>
 
     <div class="container mx-auto p-4 opacity-100 space-y-4">
-      <%= search_form_for @q, data: { turbo: false } do |f| %>
-        <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
-          <%= f.label :pickup_address_cont, "Pickup Address:" %>
-          <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+      <!-- Filters -->
+      <div data-controller="filter">
+        <div data-filter-target="filterFields" class="hidden md:block" data-filter-visible-value="false">
+          <%= search_form_for @q do |f| %>
+            <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
+              <%= f.label :pickup_address_cont, "Pickup Address:" %>
+              <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-          <%= f.label :driver_name_cont, "Driver:" %>
-          <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+              <%= f.label :driver_name_cont, "Driver:" %>
+              <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-          <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+              <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+            </div>
+          <% end %>
         </div>
-      <% end %>
 
-      <%= page_entries_info @deliveries, entry_name: 'item' %>
-      <div class="p-2 border-gray-400 rounded bg-[#fffdfd] flex flex-col space-y-2">
-        <table class="table-fixed w-full text-center">
-          <thead>
-            <tr>
-              <th class="w-12 px-4 py-2">ID</th>
-              <th class="w-1/5 px-4 py-2">Pickup Address</th>
-              <th class="w-1/5 px-4 py-2">Delivery Address</th>
-              <th class="w-16 px-4 py-2">Weight</th>
-              <th class="w-16 px-4 py-2">Distance</th>
-              <th class="w-24 px-4 py-2">Scheduled Time</th>
-              <th class="w-16 px-4 py-2">Driver</th>
-              <th class="w-16 px-4 py-2">Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @deliveries.each do |delivery| %>
-              <tr class="border-b border-gray-400 hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
-                <td><%= delivery.id %></td>
-                <td class="text-start"><%= delivery.pickup_address %></td>
-                <td class="text-start"><%= delivery.delivery_address %></td>
-                <td><%= delivery.weight %> kg</td>
-                <td><%= delivery.distance %> km</td>
-                <td><%= delivery.scheduled_time %></td>
-                <td><%= delivery.driver_name %></td>
-                <td>$<%= delivery.cost %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-
-        <div class="flex justify-end">
-          <p class="p-2 border-2 border-[#6e54ff] bg-[#ccccea] rounded font-semibold w-48 text-center">
-            Total cost: $<%= @total_cost %>
-          </p>
+        <div class="block md:hidden">
+          <div class="flex justify-end">
+            <button class="cursor-pointer p-2 space-x-2 border-2 rounded border-[#6e54ff]" data-action="click->filter#toggleFilters">
+              <i class="bi bi-funnel"></i><span data-filter-target="filterToggle"> Show filters</span>
+            </button>
+          </div>
         </div>
       </div>
 
+
+
+      <div class="mb-2 md:mb-0 text-xs md:text-base">
+        <%= page_entries_info @deliveries, entry_name: 'deliveries'%>
+      </div>
+
+      <!-- Delivery table (small screens) -->
+      <div class="block md:hidden">
+        <div class="space-y-4">
+          <% @deliveries.each do |delivery| %>
+            <div class="p-4 border-2 border-gray-400 rounded space-y-3 text-sm flex flex-col hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
+
+              <div class="text-xs">#<%= delivery.id %></div>
+
+              <div>
+                <p class="text-xs font-semibold">Pickup address</p>
+                <%= delivery.pickup_address %>
+              </div>
+
+              <div>
+                <p class="text-xs font-semibold">Delivery address</p>
+                <%= delivery.delivery_address %>
+              </div>
+
+              <div class="flex justify-between">
+                <span><i class="bi bi-minecart-loaded"></i> <%= delivery.weight %> kg</span>
+                <span><i class="bi bi-truck"></i> <%= delivery.distance %> km</span>
+                <span><i class="bi bi-calendar-check"></i> <%= delivery.scheduled_time.strftime("%B %d, %Y %I:%M %p") %></span>
+              </div>
+
+              <% if delivery.driver_name.present? %>
+                <div>
+                  <p class="text-xs font-semibold">Driver</p>
+                  <%= delivery.driver_name %>
+                </div>
+              <% end %>
+
+              <div class="ml-auto font-semibold">
+                <span><i class="bi bi-coin"></i> $<%= delivery.cost %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Delivery table (medium and larger screens) -->
+      <div class="hidden md:block">
+        <div class="p-2 border-gray-400 rounded bg-[#fffdfd] flex flex-col space-y-2">
+          <table class="table-fixed w-full text-center">
+            <thead>
+              <tr>
+                <th class="w-12 px-4 py-2">ID</th>
+                <th class="w-1/5 px-4 py-2">Pickup Address</th>
+                <th class="w-1/5 px-4 py-2">Delivery Address</th>
+                <th class="w-16 px-4 py-2">Weight</th>
+                <th class="w-16 px-4 py-2">Distance</th>
+                <th class="w-24 px-4 py-2">Scheduled Time</th>
+                <th class="w-16 px-4 py-2">Driver</th>
+                <th class="w-16 px-4 py-2">Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @deliveries.each do |delivery| %>
+                <tr class="border-b border-gray-400 hover:bg-[#ccccea] transition-all duration-100 ease-in-out">
+                  <td><%= delivery.id %></td>
+                  <td class="text-start"><%= delivery.pickup_address %></td>
+                  <td class="text-start"><%= delivery.delivery_address %></td>
+                  <td><%= delivery.weight %> kg</td>
+                  <td><%= delivery.distance %> km</td>
+                  <td><%= delivery.scheduled_time.strftime("%B %d, %Y %I:%M %p") %></td>
+                  <td><%= delivery.driver_name %></td>
+                  <td>$<%= delivery.cost %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+
+          <div class="flex justify-end">
+            <p class="p-2 font-semibold w-48 text-center">
+              Total cost: $<%= @total_cost %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pagination -->
       <div class="flex flex-col items-center space-y-4">
         <%= paginate @deliveries %>
       </div>
 
+
     </div>
 
-    <!-- Form modal -->
-
-  </div>
-  <div data-controller="validation "data-modal-target="addDeliveryForm" id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
+    <!-- Mobile footer -->
+    <div class="block md:hidden sticky bottom-0 left-0 ">
+      <footer class="w-full p-4 rounded bg-[#ccccea] text-end text-lg">
+          <span class="font-semibold">Total cost: $</span><%= @total_cost %>
+      </footer>
+    </div>
+    </div>
+  <!-- Form modal -->
+  <div data-controller="validation" data-modal-target="addDeliveryForm" id="modal-new-delivery" class="hidden absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 border bg-white border-gray-200 md:w-144 w-full h-auto rounded transition-opacity duration-500 shadow-xl p-4">
 
     <h3 class="text-2xl text-center mb-4 font-bold">Add a new delivery</h3>
 
@@ -85,10 +152,9 @@
               <%= f.text_field :pickup_address,
                   name: "pickup",
                   autocomplete: "address-line1",
-                  required: true,
                   placeholder: "Add a pickup address",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges" }
+                  data: { validation_target: "pickupAddressField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="pickupError">Add a valid address including street name and number</p>
             </div>
@@ -137,10 +203,9 @@
               <%= f.text_field :delivery_address,
                   name: "delivery",
                   autocomplete: "address-line1",
-                  required: true,
                   placeholder: "Add a delivery address",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges" }
+                  data: { validation_target: "deliveryAddressField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="deliveryError">Add a valid address including street name and number</p>
             </div>
@@ -156,7 +221,7 @@
             </div>
           </div>
 
-          <div class="flex space-x-4">
+          <div class="flex space-x-4 justify-center">
             <div class="flex flex-col w-1/2 space-y-2">
               <%= f.label :delivery_address, "City" %>
               <%= f.text_field :delivery_address,
@@ -181,29 +246,27 @@
         </div>
 
         <div class="flex flex-col">
-          <div class="flex space-x-4">
+          <div class="flex space-x-4 justify-center">
             <!-- Weight -->
             <div class="space-y-2 flex flex-col w-1/2">
               <%= f.label :weight %>
               <%= f.number_field :weight,
                   min: 1,
                   step: 0.1,
-                  required: true,
                   placeholder: "Add a weight (in kg)",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "weightField" }
+                  data: { validation_target: "weightField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="weightError">Add a valid weight</p>
             </div>
 
             <!-- Scheduled time -->
-            <div class="space-y-2 flex flex-col w-1/2">
+            <div class="space-y-2 flex flex-col w-1/2 justify-around">
               <%= f.label :scheduled_time %>
-              <%= f.text_field :scheduled_time,
-                  required: true,
+              <%= f.datetime_local_field :scheduled_time,
                   placeholder: "Select a date",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { controller: "datepicker", validation_target: "dateField" }
+                  data: { controller: "datepicker", validation_target: "dateField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="dateError">Add a valid date</p>
             </div>
@@ -221,7 +284,7 @@
         </div>
 
         <div class="flex flex-row space-x-4">
-          <button data-action="click->modal#closeForm click->validation#clearForm" class="w-1/4 cursor-pointer border rounded p-2 border-[#f7e2b5] bg-[#f7e2b5]">Cancel</button>
+          <button type="button" data-action="click->modal#closeForm click->validation#clearForm" class="w-1/4 cursor-pointer border rounded p-2">Cancel</button>
           <%= f.submit "Add delivery", class: "w-3/4 p-2 font-semibold border border-[#6e54ff] rounded bg-[#6e54ff] text-white cursor-pointer" %>
         </div>
       </div>

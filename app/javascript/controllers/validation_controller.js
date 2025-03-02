@@ -5,8 +5,10 @@ export default class extends Controller {
   static targets = [ "pickupAddressField", "pickupCityField", "pickupStateField", "pickupZipField", "pickupError", "deliveryAddressField", "deliveryCityField", "deliveryStateField", "deliveryZipField", "deliveryError", "weightField", "weightError", "dateField", "dateError", "driverNameField" ]
 
   formValidation(event) {
-    event.preventDefault()
 
+    console.log("running validation")
+
+    event.preventDefault()
     this.removeErrorStyles()
     let isFormValid = true
 
@@ -44,7 +46,7 @@ export default class extends Controller {
     if (this.weightFieldTarget.value == "" || this.weightFieldTarget.value < 1) {
       isFormValid = false
 
-      this.weightFieldTargetFieldTarget.classList.add("border-red-400")
+      this.weightFieldTarget.classList.add("border-red-400")
       this.weightErrorTarget.classList.remove("hidden")
 
     }
@@ -52,7 +54,7 @@ export default class extends Controller {
     if (this.dateFieldTarget.value == "") {
       isFormValid = false
 
-      this.dateFieldTargetFieldTarget.classList.add("border-red-400")
+      this.dateFieldTarget.classList.add("border-red-400")
       this.dateErrorTarget.classList.remove("hidden")
     }
 
@@ -63,7 +65,7 @@ export default class extends Controller {
     }
   }
 
-  trackAddressChanges(event) {
+  trackFieldChanges(event) {
 
     if (event.target === this.pickupAddressFieldTarget) {
       this.pickupCityFieldTarget.value = ""
@@ -94,6 +96,16 @@ export default class extends Controller {
         }
       })
     }
+
+    if (event.target === this.weightFieldTarget) {
+      this.weightFieldTarget.classList.remove("border-red-400")
+      this.weightErrorTarget.classList.add("hidden")
+    }
+
+    if (event.target === this.dateFieldTarget) {
+      this.dateFieldTarget.classList.remove("border-red-400")
+      this.dateErrorTarget.classList.add("hidden")
+    }
   }
 
   removeErrorStyles() {
@@ -105,13 +117,10 @@ export default class extends Controller {
   }
 
   clearForm() {
-
-    console.log("cleared")
     const fields = [this.pickupAddressFieldTarget, this.pickupCityFieldTarget, this.pickupStateFieldTarget, this.pickupZipFieldTarget, this.deliveryAddressFieldTarget, this.deliveryCityFieldTarget, this.deliveryStateFieldTarget, this.deliveryZipFieldTarget, this.weightFieldTarget, this.dateFieldTarget, this.driverNameFieldTarget]
 
     fields.forEach((field) => {
       field.value = ""
     })
-
   }
 }

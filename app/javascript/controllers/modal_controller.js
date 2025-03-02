@@ -5,8 +5,6 @@ export default class extends Controller {
   static targets = ["addDeliveryForm", "pageBg"]
 
   showForm() {
-    console.log("show form")
-
     this.addDeliveryFormTarget.classList.remove("hidden")
     this.pageBgTarget.classList.add("opacity-25", "pointer-events-none")
   }
