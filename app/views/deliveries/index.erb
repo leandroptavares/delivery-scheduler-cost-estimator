@@ -290,6 +290,18 @@
       </div>
     <% end %>
   </div>
+
+  <!--Flash messages -->
+  <% if flash[:notice] %>
+  <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-green-400 bg-green-200 rounded text-center md:w-1/4">
+    <%= flash[:notice] %>
+  </div>
+  <% elsif flash[:alert] %>
+  <div class="fixed bottom-0 left-1/2 transform -translate-x-1/2 w-full p-2 border-2 border-red-400 bg-red-200 rounded text-center">
+    <%= flash[:alert] %>
+  </div>
+  <% end %>
+
 </div>
 
 <script data-turbo-eval="false">
