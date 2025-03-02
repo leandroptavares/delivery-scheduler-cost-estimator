@@ -85,10 +85,9 @@
               <%= f.text_field :pickup_address,
                   name: "pickup",
                   autocomplete: "address-line1",
-                  required: true,
                   placeholder: "Add a pickup address",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "pickupAddressField", action: "change->validation#trackAddressChanges" }
+                  data: { validation_target: "pickupAddressField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="pickupError">Add a valid address including street name and number</p>
             </div>
@@ -137,10 +136,9 @@
               <%= f.text_field :delivery_address,
                   name: "delivery",
                   autocomplete: "address-line1",
-                  required: true,
                   placeholder: "Add a delivery address",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "deliveryAddressField", action: "change->validation#trackAddressChanges" }
+                  data: { validation_target: "deliveryAddressField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="deliveryError">Add a valid address including street name and number</p>
             </div>
@@ -188,10 +186,9 @@
               <%= f.number_field :weight,
                   min: 1,
                   step: 0.1,
-                  required: true,
                   placeholder: "Add a weight (in kg)",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { validation_target: "weightField" }
+                  data: { validation_target: "weightField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="weightError">Add a valid weight</p>
             </div>
@@ -200,10 +197,9 @@
             <div class="space-y-2 flex flex-col w-1/2">
               <%= f.label :scheduled_time %>
               <%= f.text_field :scheduled_time,
-                  required: true,
                   placeholder: "Select a date",
                   class: "px-1 py-1 border-2 rounded border-gray-400 focus:outline-[#6e54ff]",
-                  data: { controller: "datepicker", validation_target: "dateField" }
+                  data: { controller: "datepicker", validation_target: "dateField", action: "change->validation#trackFieldChanges" }
               %>
               <p class="hidden text-red-400 text-xs" data-validation-target="dateError">Add a valid date</p>
             </div>
