@@ -10,21 +10,36 @@
     </nav>
 
     <div class="container mx-auto p-4 opacity-100 space-y-4">
-
       <!-- Filters -->
-      <%= search_form_for @q, data: { turbo: false } do |f| %>
-        <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
-          <%= f.label :pickup_address_cont, "Pickup Address:" %>
-          <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+      <div data-controller="filter">
+        <div data-filter-target="filterFields" class="hidden md:block">
+          <%= search_form_for @q, data: { turbo: false } do |f| %>
+            <div class="p-4 space-x-4 space-y-2 md:space-y-0 flex flex-col md:flex-row justify-end md:items-center rounded bg-[#fffdfd]">
+              <%= f.label :pickup_address_cont, "Pickup Address:" %>
+              <%= f.search_field :pickup_address_cont, placeholder: "Search by pickup address", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-          <%= f.label :driver_name_cont, "Driver:" %>
-          <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
+              <%= f.label :driver_name_cont, "Driver:" %>
+              <%= f.search_field :driver_name_cont, placeholder: "Search by driver", class: "border border-gray-400 focus:outline-[#6e54ff] p-2 rounded w-full md:w-52" %>
 
-          <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+              <%= f.submit "Filter", name: "", class: "cursor-pointer p-2 font-semibold border-2 border-[#6e54ff] rounded md:w-32"%>
+            </div>
+          <% end %>
         </div>
-      <% end %>
 
-      <%= page_entries_info @deliveries, entry_name: 'item' %>
+        <div class="block md:hidden">
+          <div class="flex justify-end">
+            <button class="cursor-pointer p-2 space-x-2 border-2 rounded border-[#6e54ff]" data-action="click->filter#toogleFilters">
+              <i class="bi bi-funnel"></i><span data-filter-target="filterToogle"> Show filters</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="mb-2 md:mb-0 text-xs md:text-base">
+        <%= page_entries_info @deliveries, entry_name: 'deliveries'%>
+      </div>
 
       <!-- Delivery table (small screens) -->
       <div class="block md:hidden">
