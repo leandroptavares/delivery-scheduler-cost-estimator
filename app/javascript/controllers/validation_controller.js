@@ -5,8 +5,10 @@ export default class extends Controller {
   static targets = [ "pickupAddressField", "pickupCityField", "pickupStateField", "pickupZipField", "pickupError", "deliveryAddressField", "deliveryCityField", "deliveryStateField", "deliveryZipField", "deliveryError", "weightField", "weightError", "dateField", "dateError", "driverNameField" ]
 
   formValidation(event) {
-    event.preventDefault()
 
+    console.log("running validation")
+
+    event.preventDefault()
     this.removeErrorStyles()
     let isFormValid = true
 
@@ -115,13 +117,10 @@ export default class extends Controller {
   }
 
   clearForm() {
-
-    console.log("cleared")
     const fields = [this.pickupAddressFieldTarget, this.pickupCityFieldTarget, this.pickupStateFieldTarget, this.pickupZipFieldTarget, this.deliveryAddressFieldTarget, this.deliveryCityFieldTarget, this.deliveryStateFieldTarget, this.deliveryZipFieldTarget, this.weightFieldTarget, this.dateFieldTarget, this.driverNameFieldTarget]
 
     fields.forEach((field) => {
       field.value = ""
     })
-
   }
 }

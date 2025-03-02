@@ -5,13 +5,7 @@ export default class extends Controller {
   static targets = ["filterFields", "filterToogle"]
   static isFilterVisible = false
 
-  connect() {
-    console.log("filter controller is here")
-  }
-
   toogleFilters(event) {
-    console.log("Toogling Filters...")
-
     if (!this.constructor.isFilterVisible) {
       this.filterFieldsTarget.classList.remove("hidden")
       this.filterToogleTarget.textContent = "Hide filters"
