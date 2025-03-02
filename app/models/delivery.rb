@@ -3,10 +3,10 @@ class Delivery < ApplicationRecord
   validates :delivery_address, presence: true
   validate :pickup_and_delivery_addresses_must_differ
   validates :weight, presence: true, numericality: { greater_than: 0 }
-  validates :distance, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :distance, presence: true, numericality: { greater_than: 0 }
   validates :scheduled_time, presence: true
   validate :scheduled_time_must_be_in_future
-  validates :cost, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :cost, presence: true, numericality: { greater_than: 0 }
 
   before_validation :calculate_distance
   before_validation :calculate_cost
