@@ -12,10 +12,10 @@ A valid Mapbox key is needed in order to run this application.
 
 - Set up the database (rails db:create db:migrate)
 - Seed the database for initial data (rails db:seed)
-- Install dependencies (bundle install)
+- Install dependencies (bin/bundle install)
 - Create a .env file in the root directory (touch .env)
 - In the .env file, store a valid Mapbox key in a MAPBOX_KEY variable (MAPBOX_KEY = your_key_here)
-- Open the project (rails server)
-
+- Open the project (bin/rails server)
+- In case of styles not being applied, run bin/rails tailwindcss:watch (optional)
 
 
